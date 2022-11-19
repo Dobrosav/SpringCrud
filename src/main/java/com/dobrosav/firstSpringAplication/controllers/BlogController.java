@@ -4,11 +4,13 @@ import com.dobrosav.firstSpringAplication.models.Blog;
 import com.dobrosav.firstSpringAplication.models.BlogReprository;
 import com.dobrosav.firstSpringAplication.utill.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 public class BlogController {
@@ -20,17 +22,31 @@ public class BlogController {
         return this.blogReprository.findAll();
     }
     @GetMapping("/blog/{id}")
-    public Blog getBlogById(@PathVariable String id){
-        int blogId = Integer.parseInt(id);
-        return this.blogReprository.findById(blogId).get();
+    @ResponseBody
+    public ResponseEntity getBlogById(@PathVariable String id){
+        try {
+            int blogId = Integer.parseInt(id);
+            return new ResponseEntity(this.blogReprository.findById(blogId).get(), HttpStatus.OK);
+        }
+        catch (NoSuchElementException exception){
+            message.setText("Not found");
+            return new ResponseEntity(message, HttpStatus.NOT_FOUND);
+        }
     }
     @DeleteMapping("/blog/{id}")
     @ResponseBody
     public ResponseEntity deleteById(@PathVariable String id){
-        int blogId = Integer.parseInt(id);
-        this.blogReprository.deleteById(blogId);
-        message.setText("Blog deleted");
-        return new ResponseEntity(message, HttpStatus.OK);
+        try {
+            int blogId = Integer.parseInt(id);
+            this.blogReprository.deleteById(blogId);
+            message.setText("Blog deleted");
+            return new ResponseEntity(message, HttpStatus.OK);
+        }
+        catch (EmptyResultDataAccessException exception){
+            message.setText("Not found");
+            return new ResponseEntity(message, HttpStatus.NOT_FOUND);
+        }
+
     }
     @PostMapping("/blog")
     @ResponseBody
