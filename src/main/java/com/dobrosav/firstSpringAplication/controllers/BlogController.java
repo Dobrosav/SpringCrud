@@ -25,6 +25,7 @@ public class BlogController {
         return this.blogReprository.findById(blogId).get();
     }
     @DeleteMapping("/blog/{id}")
+    @ResponseBody
     public ResponseEntity deleteById(@PathVariable String id){
         int blogId = Integer.parseInt(id);
         this.blogReprository.deleteById(blogId);
