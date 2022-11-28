@@ -14,8 +14,12 @@ import java.util.NoSuchElementException;
 
 @RestController
 public class BlogController {
-    @Autowired
+
     BlogReprository blogReprository;
+    @Autowired
+    public BlogController(BlogReprository blogReprository){
+        this.blogReprository=blogReprository;
+    }
     private static Message message = new Message();
     @GetMapping("/blog")
     public List<Blog> index(){
