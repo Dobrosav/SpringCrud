@@ -14,7 +14,9 @@ public class Blog {
     @Column(name = "content")
     private String content;
 
-    public Blog(){}
+    public Blog() {
+    }
+
     public Blog(int id, String title, String content) {
         this.id = id;
         this.title = title;
