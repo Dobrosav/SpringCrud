@@ -33,6 +33,17 @@ public class BlogController {
             return new ResponseEntity(message, HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/blogWithId")
+    @ResponseBody
+    public ResponseEntity getBlogByIdFromParameters(@RequestParam(value = "id") int id){
+        try {
+            return new ResponseEntity(this.blogReprository.findById(id).get(), HttpStatus.OK);
+        }
+        catch (NoSuchElementException exception){
+            message.setText("Not found");
+            return new ResponseEntity(message, HttpStatus.NOT_FOUND);
+        }
+    }
     @DeleteMapping("/blog/{id}")
     @ResponseBody
     public ResponseEntity deleteById(@PathVariable String id){
